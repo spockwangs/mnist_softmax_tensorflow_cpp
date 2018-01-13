@@ -8,7 +8,7 @@
 import tensorflow as tf
 import getopt
 import sys
-import exception
+import exceptions
 import traceback
 
 class Usage(Exception):
@@ -17,8 +17,7 @@ class Usage(Exception):
 
 def usage(progname):
     print('''Usage:
-    {progname} [-h | --help]
-    {progname} --export_dir <dir>'''.format(progname=progname))
+    {progname} [-h | --help] --export_dir <dir> [--as_text]'''.format(progname=progname))
     
 def main(argv=None):
     if argv is None:
@@ -63,9 +62,7 @@ def main(argv=None):
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name='accuracy')
 
         # Export the computation graph.
-        with tf.Session() as sess:
-            sess.run(tf.global_variables_initializer())
-            tf.train.write_graph(sess.graph_def, export_dir, 'mnist_graph.pb', as_text=as_text)
+        tf.train.write_graph(tf.get_default_graph().as_graph_def(), export_dir, 'mnist_graph.pb', as_text=as_text)
     except Usage as err:
         print(err.msg)
         usage(argv[0])
