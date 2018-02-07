@@ -61,6 +61,9 @@ def main(argv=None):
         correct_prediction = tf.equal(tf.argmax(y, 1), tf.cast(y_, tf.int64))
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, tf.float32), name='accuracy')
 
+        # Create the global variables initializer.
+        init = tf.variables_initializer(tf.global_variables(), name='init')
+        
         # Export the computation graph.
         tf.train.write_graph(tf.get_default_graph().as_graph_def(), export_dir, 'mnist_graph.pb', as_text=as_text)
     except Usage as err:
